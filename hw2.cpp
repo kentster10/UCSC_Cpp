@@ -18,9 +18,9 @@ using namespace std;
 class CarNode {
 
 public:
-    CarNode() : m_pNext(0), m_ticketNum(0) { }
+    CarNode() : m_pNext(0), m_ticketNum(0) { };
     ~CarNode();
-    CarNode(CarNode &) : m_pNext(0), m_ticketNum(0) { }
+    CarNode(CarNode &) : m_pNext(0), m_ticketNum(0) { };
 
     // assign next pointer
     void SetNext(CarNode* p){m_pNext=p;}
@@ -247,6 +247,11 @@ int main()
             switch (selectionLower) {
                 case d:
                     //DisplayFun
+                    cout << "Alley A: " << '\t';
+                    while (!AlleyA.Empty()){
+                         cout << tesla->GetTicketNum()  << '\t';
+                    }
+                    cout << '\n';
 
                     break;
 
