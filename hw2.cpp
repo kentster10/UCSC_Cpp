@@ -14,9 +14,6 @@
 
 using namespace std;
 
-static enum StringValue {d, p, r, q};
-
-
 #define MAXSIZE 5
 class CarNode {
 
@@ -62,7 +59,7 @@ public:
     CarNode *GetTop(){return(m_pTop);};
     int Park(CarNode *);
 
-    int CreateTicketNum
+    int CreateTicketNum() { return(mSize) ; };
 
 
 
@@ -151,6 +148,7 @@ int CAlley::Park(int userTicketNum)
         CarNode *pNewNode = new CarNode;
         pNewNode->SetTicketNum(userTicketNum);  // assign new node the input userTicketNum
         Push(pNewNode);
+        cout << "Ticket no. = " << userTicketNum << '\n';
         return 1;
     }
     return 0;
@@ -192,7 +190,13 @@ void CAlley::Retrieve(int userTicketNum, CAlley *pB)
         // pop from this->CAlley
         CarNode *leaf = Pop();
         //check ticket number of CarNode == userTicketNum
-        if (leaf->GetTicketNum() == userTicketNum) break;
+        if (leaf->GetTicketNum() == userTicketNum) {
+        cout << "Ticket no. = " << userTicketNum << '\n';
+        break;
+        }
+
+        if (leaf->GetTicketNum() > mSize) cout << "CAR NOT PARKED IN MY LOT" << '\n';
+
         else pB->Park(leaf->GetTicketNum());
         delete leaf;
     }
@@ -219,10 +223,12 @@ void CAlley::Terminate()
 
 int main()
 {
+    CAlley AlleyA;
+    CAlley *pAlleyB;
+    CarNode *tesla = new CarNode;
 
 
     enum userInput {d = 'd', p = 'p', r = 'r', q = 'q'};
-    CAlley Alley;
 
     cout << "D)isplay " << "\tP)ark " << "\tR)etrieve" << "\tQ)uit:" << '\n';
 
@@ -247,24 +253,26 @@ int main()
                 case p:
                     //ParkFun
 
-                    int curTicket = 0;
-                    int nextTicket = curTicket + 1;
-                    if (nextTicket >= MAXSIZE){
-                        cout << "Parking Lot Full" << "\n";
+                    if ( AlleyA.Full() ) {
+                        cout << "PARKING LOT FULL" << '\n';
                     }
                     else {
-                        Alley.Park(curTicket);
+                        int curTicket = AlleyA.CreateTicketNum();
+                        AlleyA.Park(curTicket);
                     }
-                    curTicket
                     break;
 
                 case r:
                     //RetrieveFun
+                    AlleyA.Retrieve(tesla->GetTicketNum(), pAlleyB);
 
                     break;
 
                 case q:
                     //TerminalFun
+                    AlleyA.Terminate();
+
+
                 default:
                     cerr << "Invalid Entry\n";
                     break;
@@ -275,10 +283,8 @@ int main()
 
         cout << "Invalid character, please try again" << endl;
     }
-    cout << "You entered: " << input << endl << endl;
-
     cout << "D)isplay " << "\tP)ark " << "\tR)etrieve" << "\tQ)uit:" << '\n';
 
-    return 0;
+    //return 0;
 
 }
