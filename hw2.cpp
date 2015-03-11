@@ -188,17 +188,20 @@ void CAlley::Retrieve(int userTicketNum, CAlley *pB)
 
     while (!this->Empty()){
         // pop from this->CAlley
-        CarNode *leaf = Pop();
+        //CarNode *leaf = Pop();
+
+        topCar = this->CarNode *GetTop()
+
         //check ticket number of CarNode == userTicketNum
-        if (leaf->GetTicketNum() == userTicketNum) {
+        if (topCar->GetTicketNum() == userTicketNum) {
         cout << "Ticket no. = " << userTicketNum << '\n';
         break;
         }
 
-        if (leaf->GetTicketNum() > mSize) cout << "CAR NOT PARKED IN MY LOT" << '\n';
+        if (topCar->GetTicketNum() > mSize) cout << "CAR NOT PARKED IN MY LOT" << '\n';
 
-        else pB->Park(leaf->GetTicketNum());
-        delete leaf;
+        else pB->Park(topCar->GetTicketNum());
+        delete topCar;
     }
     //move cars in B back to A
     while (!pB->Empty()){
@@ -211,6 +214,7 @@ void CAlley::Retrieve(int userTicketNum, CAlley *pB)
 
 void CAlley::Terminate()
 {
+    /*
     CarNode *pCurr, *pDeleteThisNode;
 
     pCurr = m_pTop; // assign address of head node to current node
@@ -219,6 +223,7 @@ void CAlley::Terminate()
         delete pDeleteThisNode;
 
     }
+     */
 }
 
 int main()
