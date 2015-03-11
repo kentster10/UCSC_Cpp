@@ -10,6 +10,8 @@
 #include <string>
 #include <sstream>
 #include <map>
+#include <stdlib.h>
+
 
 
 
@@ -200,7 +202,7 @@ int CAlley::Park(CarNode *pUserCar)
 void CAlley::Retrieve(int userTicketNum, CAlley *pB)
 {
     // use pop here
-
+    cout << "Retrieve ticket number " << userTicketNum << "\n";
     while (!this->Empty()){
         // pop from this->CAlley
         //CarNode *leaf = Pop();
@@ -252,10 +254,10 @@ int main()
 
 
     while(1) {
-        cout << "D)isplay " << "\tP)ark " << "\tR)etrieve" << "\tQ)uit:";
+        cout << "D)isplay " << "\tP)ark " << "\tR)etrieve" << "\tQ)uit:\n";
 
         string input;
-        cout << "Please enter 1 char (d, p, r, or q): \n";
+        cout << "Please enter 1 char (d, p, r, or q): ";
         getline(cin, input);
 
         if (input.length() != 1) {
@@ -274,7 +276,10 @@ int main()
                 break;
 
             case r:
-                AlleyA->Retrieve(tesla->GetTicketNum(), pAlleyB);
+                int inputTicketNumber;
+                cout << "Ticket no.: ";
+                getline(cin, input);
+                AlleyA->Retrieve(stoi(input), pAlleyB);
                 break;
             case q:
                 AlleyA->Terminate();
