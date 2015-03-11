@@ -18,9 +18,9 @@ using namespace std;
 class CarNode {
 
 public:
-    CarNode() : m_pNext(0), m_ticketNum(0) { };
-    ~CarNode();
-    CarNode(CarNode &) : m_pNext(0), m_ticketNum(0) { };
+    CarNode() : m_pNext(0), m_ticketNum(0) { }
+    ~CarNode() {}
+    CarNode(CarNode &) : m_pNext(0), m_ticketNum(0) { }
 
     // assign next pointer
     void SetNext(CarNode* p){m_pNext=p;}
@@ -190,7 +190,7 @@ void CAlley::Retrieve(int userTicketNum, CAlley *pB)
         // pop from this->CAlley
         //CarNode *leaf = Pop();
 
-        topCar = this->CarNode *GetTop()
+        CarNode *topCar = this->GetTop();
 
         //check ticket number of CarNode == userTicketNum
         if (topCar->GetTicketNum() == userTicketNum) {
@@ -229,7 +229,7 @@ void CAlley::Terminate()
 int main()
 {
     CAlley AlleyA;
-    CAlley *pAlleyB;
+    CAlley *pAlleyB = new CAlley();
     CarNode *tesla = new CarNode;
 
 
@@ -282,7 +282,7 @@ int main()
                     //TerminalFun
                     AlleyA.Terminate();
 
-
+                    break;
                 default:
                     cerr << "Invalid Entry\n";
                     break;
