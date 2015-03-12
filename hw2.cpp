@@ -143,6 +143,7 @@ CarNode * CAlley::Pop()
         CarNode *orig = m_pTop; //save top node to variable
         m_pTop = m_pTop->GetNext();
         mSize--;
+        cout << "After pop: " << Display() << "\n";
         return orig;
     }
     else {
@@ -202,30 +203,36 @@ int CAlley::Park(CarNode *pUserCar)
 void CAlley::Retrieve(int userTicketNum, CAlley *pB)
 {
     // use pop here
-    cout << "Retrieve ticket number " << userTicketNum << "\n";
     while (!this->Empty()){
         // pop from this->CAlley
         //CarNode *leaf = Pop();
 
-        CarNode *topCar = this->GetTop();
+        CarNode *topCar = this->Pop();
 
+        cout << "This is the ticket num: " << topCar->GetTicketNum() << endl;
+        cout << "This is the value of msize: " << this->CreateTicketNum() << endl;
         //check ticket number of CarNode == userTicketNum
         if (topCar->GetTicketNum() == userTicketNum) {
-        cout << "Ticket no. = " << userTicketNum << '\n';
+            while (!pB->Empty()){
+                cout << "Enter while loop" << endl;
+                CarNode *moveBack = pB->GetTop();
+                this->Park(moveBack->GetTicketNum());
+                delete moveBack;
+            }
+
+            cout << "Ticket no. = " << userTicketNum << '\n';
         break;
         }
 
         if (topCar->GetTicketNum() > mSize) cout << "CAR NOT PARKED IN MY LOT" << '\n';
 
         else pB->Park(topCar->GetTicketNum());
+
+        cout << "Car parked in B: " << topCar->GetTicketNum() << endl;
+
         delete topCar;
     }
     //move cars in B back to A
-    while (!pB->Empty()){
-        CarNode *moveBack = pB->GetTop();
-        this->Park(moveBack->GetTicketNum());
-        delete moveBack;
-    }
 
 }
 
@@ -253,8 +260,8 @@ int main()
     enum userInput {d = 'd', p = 'p', r = 'r', q = 'q'};
 
 
-    while(1) {
-        cout << "D)isplay " << "\tP)ark " << "\tR)etrieve" << "\tQ)uit:\n";
+    while (userInput != 'q') {
+        cout << "D)isplay " << "\tP)ark " << "\tR)etrieve" << "\tQ)uit:";
 
         string input;
         cout << "Please enter 1 char (d, p, r, or q): ";
@@ -282,7 +289,8 @@ int main()
                 AlleyA->Retrieve(stoi(input), pAlleyB);
                 break;
             case q:
-                AlleyA->Terminate();
+                cout << "bye bye" << endl;
+                //AlleyA->Terminate();
                 break;
             default:
                 cout << "Invalid entry \n";
