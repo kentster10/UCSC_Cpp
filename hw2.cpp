@@ -118,7 +118,6 @@ int CAlley::Push(CarNode *pNewNode)
         pNewNode->SetNext(m_pTop);
     }
     m_pTop = pNewNode;
-    //cout << "<debug> After push: " << Display() << "\n";
     ++mSize;
     return 1;
 
@@ -140,7 +139,6 @@ CarNode * CAlley::Pop()
         CarNode *orig = m_pTop; //save top node to variable
         m_pTop = m_pTop->GetNext();
         mSize--;
-        //cout << "<debug> After pop: " << Display() << "\n";
         return orig;
     }
     else {
@@ -165,9 +163,14 @@ int CAlley::Park(int userTicketNum)
 {
     // create link in this function
         CarNode *pNewNode = new CarNode;
-        pNewNode->SetTicketNum(userTicketNum);  // assign new node the input userTicketNum
+        pNewNode->SetTicketNum(userTicketNum); // TODO: make sure it's not a repeat number
         cout << "Ticket No.: " << pNewNode->GetTicketNum() << endl;
-        return Push(pNewNode);
+        int result = Push(pNewNode);
+        if (result == 0) {
+            cout << "PARKING LOT FULL\n";
+            delete pNewNode;
+        }
+        return result;
 }
 
 
@@ -188,45 +191,29 @@ int CAlley::Park(int userTicketNum)
 ///////////////////////////////////////////////////////////////
 void CAlley::Retrieve(int userTicketNum, CAlley *pB)
 {
-    if (userTicketNum > mSize) {
-        cout << "CAR NOT PARKED IN MY LOT" << '\n';
-        while (!this->Empty()){
-            // pop from this->CAlley
-            CarNode *topCar = this->Pop();
-        }
-    }
+
+
 
     // use pop here
     while (!this->Empty()){
         // pop from this->CAlley
         CarNode *topCar = this->Pop();
-
-        cout << "<debug> This is the car ticket after pop: " << topCar->GetTicketNum() << endl;
-        cout << "msize = " << mSize << endl;
-
-
-
         //check ticket number of CarNode == userTicketNum
         if (topCar->GetTicketNum() == userTicketNum) {
 
             while (!pB->Empty()){
-                cout << "<debug> Enter while loop" << endl;
                 CarNode *moveBack = pB->GetTop();
                 this->Park(moveBack->GetTicketNum());
-                delete moveBack;
+                // create bogus alley for Retrieve
+                CAlley *bogus = new CAlley();
+                pB->Retrieve(moveBack->GetTicketNum(), bogus);
+                bogus->Terminate();
             }
-
-        continue;
+            
+            return;
         }
-        else pB->Park(topCar->GetTicketNum());
-            topCar = topCar->GetNext();
-
-
-
-
-
-            //cout << "<debug> Car parked in B: " << topCar->GetTicketNum() << endl;
-
+        pB->Park(topCar->GetTicketNum());
+        topCar = topCar->GetNext();
         delete topCar;
     }
 
@@ -280,12 +267,18 @@ int main()
             case d:
                 cout << "Alley A:" << AlleyA->Display() << "\n";
                 break;
-            case p:
-                AlleyA->Park(ticketNumber++);
+            case p: {
+                int success = AlleyA->Park(ticketNumber);
+                if (success) {
+                    ticketNumber++;
+                }
+                
                 break;
+            }
 
             case r:
                 int inputTicketNumber;
+                cout << "Ticket no: ";
                 cin >> inputTicket;
                     if (cin.good()){ // checks if state of stream is good for I/O operations
                         if (inputTicket < 0) break;
@@ -293,7 +286,6 @@ int main()
                     } // end it
                     cin.clear();  // will reset the stream back to a good condition
                     cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove all remaining junk from stream
-
                 AlleyA->Retrieve(inputTicket, pAlleyB);
                 break;
             case q:
