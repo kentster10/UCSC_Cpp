@@ -238,7 +238,7 @@ void CAlley::Retrieve(int userTicketNum, CAlley *pB)
 
 void CAlley::Terminate()
 {
-    /*
+
     CarNode *pCurr, *pDeleteThisNode;
 
     pCurr = m_pTop; // assign address of head node to current node
@@ -247,7 +247,7 @@ void CAlley::Terminate()
         delete pDeleteThisNode;
 
     }
-     */
+
 }
 
 int main()
@@ -260,7 +260,7 @@ int main()
     enum userInput {d = 'd', p = 'p', r = 'r', q = 'q'};
 
 
-    while (userInput != 'q') {
+    while (1) {
         cout << "D)isplay " << "\tP)ark " << "\tR)etrieve" << "\tQ)uit:";
 
         string input;
