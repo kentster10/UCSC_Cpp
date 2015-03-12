@@ -52,7 +52,7 @@ public:
 
     int Park(int);                          // park a car
     void Retrieve(int, CAlley *);           // retrieve a car
-    void Terminate();               // quit the program
+    int Terminate();               // quit the program
     string Display();                   // display contents af alley
 
     bool Empty(){return mSize==0;};      // check if stack is empty
@@ -68,8 +68,6 @@ public:
 private:
 
     void SetTop(CarNode *p){m_pTop=p;} // assign top pointer
-
-    //bool Empty(){return ((mSize==0) ? true : false);}
 
     int Push(CarNode *);        // push one node onto top of stack
 
@@ -89,7 +87,6 @@ private:
 string CAlley::Display() 
 {
     ostringstream result;
-    //cout << "fuck yo couch \n";
     CarNode *currentCar = GetTop();
     while (currentCar) {
         result << "\t" << currentCar->GetTicketNum();
@@ -121,7 +118,7 @@ int CAlley::Push(CarNode *pNewNode)
         pNewNode->SetNext(m_pTop);
     }
     m_pTop = pNewNode;
-    cout << "After push: " << Display() << "\n";
+    //cout << "<debug> After push: " << Display() << "\n";
     ++mSize;
     return 1;
 
@@ -143,7 +140,7 @@ CarNode * CAlley::Pop()
         CarNode *orig = m_pTop; //save top node to variable
         m_pTop = m_pTop->GetNext();
         mSize--;
-        cout << "After pop: " << Display() << "\n";
+        //cout << "<debug> After pop: " << Display() << "\n";
         return orig;
     }
     else {
@@ -169,20 +166,9 @@ int CAlley::Park(int userTicketNum)
     // create link in this function
         CarNode *pNewNode = new CarNode;
         pNewNode->SetTicketNum(userTicketNum);  // assign new node the input userTicketNum
+        cout << "Ticket No.: " << pNewNode->GetTicketNum() << endl;
         return Push(pNewNode);
 }
-
-/*
-int CAlley::Park(CarNode *pUserCar)
-{
-    if (!Full()){
-        Push(pUserCar);
-        return 1;
-    }
-    return 0;
-}
-*/
-
 
 
 ///////////////////////////////////////////////////////////////
@@ -205,30 +191,27 @@ void CAlley::Retrieve(int userTicketNum, CAlley *pB)
     // use pop here
     while (!this->Empty()){
         // pop from this->CAlley
-        //CarNode *leaf = Pop();
-
         CarNode *topCar = this->Pop();
 
-        cout << "This is the ticket num: " << topCar->GetTicketNum() << endl;
-        cout << "This is the value of msize: " << this->CreateTicketNum() << endl;
+        //cout << "<debug> This is the car ticket after pop: " << topCar->GetTicketNum() << endl;
+
+
         //check ticket number of CarNode == userTicketNum
         if (topCar->GetTicketNum() == userTicketNum) {
             while (!pB->Empty()){
-                cout << "Enter while loop" << endl;
+                //cout << "<debug> Enter while loop" << endl;
                 CarNode *moveBack = pB->GetTop();
                 this->Park(moveBack->GetTicketNum());
                 delete moveBack;
             }
 
-            cout << "Ticket no. = " << userTicketNum << '\n';
         break;
         }
 
         if (topCar->GetTicketNum() > mSize) cout << "CAR NOT PARKED IN MY LOT" << '\n';
 
         else pB->Park(topCar->GetTicketNum());
-
-        cout << "Car parked in B: " << topCar->GetTicketNum() << endl;
+            //cout << "<debug> Car parked in B: " << topCar->GetTicketNum() << endl;
 
         delete topCar;
     }
@@ -236,7 +219,7 @@ void CAlley::Retrieve(int userTicketNum, CAlley *pB)
 
 }
 
-void CAlley::Terminate()
+int CAlley::Terminate()
 {
 
     CarNode *pCurr, *pDeleteThisNode;
@@ -245,8 +228,9 @@ void CAlley::Terminate()
     while (pCurr !=0){
         pDeleteThisNode = pCurr;
         delete pDeleteThisNode;
-
     }
+
+    return 0;
 
 }
 
@@ -257,14 +241,15 @@ int main()
     CarNode *tesla = new CarNode;
 
     int ticketNumber = 1;
+    int inputTicket = 0;
     enum userInput {d = 'd', p = 'p', r = 'r', q = 'q'};
+    int status = 1;
 
 
-    while (1) {
+    while (status) {
         cout << "D)isplay " << "\tP)ark " << "\tR)etrieve" << "\tQ)uit:";
 
         string input;
-        cout << "Please enter 1 char (d, p, r, or q): ";
         getline(cin, input);
 
         if (input.length() != 1) {
@@ -284,13 +269,19 @@ int main()
 
             case r:
                 int inputTicketNumber;
-                cout << "Ticket no.: ";
-                getline(cin, input);
-                AlleyA->Retrieve(stoi(input), pAlleyB);
+                cin >> inputTicket;
+                    if (cin.good()){ // checks if state of stream is good for I/O operations
+                        if (inputTicket < 0) break;
+                        else cout << "Ticket No. = " <<  inputTicket << "\n";
+                    } // end it
+                    cin.clear();  // will reset the stream back to a good condition
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // remove all remaining junk from stream
+
+                AlleyA->Retrieve(inputTicket, pAlleyB);
                 break;
             case q:
                 cout << "bye bye" << endl;
-                //AlleyA->Terminate();
+                status = AlleyA->Terminate();
                 break;
             default:
                 cout << "Invalid entry \n";
