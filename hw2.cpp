@@ -188,33 +188,50 @@ int CAlley::Park(int userTicketNum)
 ///////////////////////////////////////////////////////////////
 void CAlley::Retrieve(int userTicketNum, CAlley *pB)
 {
+    if (userTicketNum > mSize) {
+        cout << "CAR NOT PARKED IN MY LOT" << '\n';
+        while (!this->Empty()){
+            // pop from this->CAlley
+            CarNode *topCar = this->Pop();
+        }
+    }
+
     // use pop here
     while (!this->Empty()){
         // pop from this->CAlley
         CarNode *topCar = this->Pop();
 
-        //cout << "<debug> This is the car ticket after pop: " << topCar->GetTicketNum() << endl;
+        cout << "<debug> This is the car ticket after pop: " << topCar->GetTicketNum() << endl;
+        cout << "msize = " << mSize << endl;
+
 
 
         //check ticket number of CarNode == userTicketNum
         if (topCar->GetTicketNum() == userTicketNum) {
+
             while (!pB->Empty()){
-                //cout << "<debug> Enter while loop" << endl;
+                cout << "<debug> Enter while loop" << endl;
                 CarNode *moveBack = pB->GetTop();
                 this->Park(moveBack->GetTicketNum());
                 delete moveBack;
             }
 
-        break;
+        continue;
         }
-
-        if (topCar->GetTicketNum() > mSize) cout << "CAR NOT PARKED IN MY LOT" << '\n';
-
         else pB->Park(topCar->GetTicketNum());
+            topCar = topCar->GetNext();
+
+
+
+
+
             //cout << "<debug> Car parked in B: " << topCar->GetTicketNum() << endl;
 
         delete topCar;
     }
+
+    cout << "CAR NOT PARKED IN MY LOT" << '\n';
+
     //move cars in B back to A
 
 }
